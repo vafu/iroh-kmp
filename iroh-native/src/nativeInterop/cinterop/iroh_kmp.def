@@ -1,0 +1,3 @@
+headers = iroh_kmp.h
+package = iroh_kmp
+linkerOpts = -framework CoreFoundation -framework Security -framework SystemConfiguration

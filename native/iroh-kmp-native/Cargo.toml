@@ -1,0 +1,34 @@
+[package]
+name = "iroh-kmp-native"
+description = "Private native implementation for iroh-kmp"
+edition.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+publish = false
+
+[lib]
+name = "iroh_kmp_native"
+crate-type = ["rlib", "cdylib", "staticlib"]
+
+[dependencies]
+bytes.workspace = true
+futures.workspace = true
+iroh = { workspace = true, features = ["unstable-custom-transports"] }
+iroh-base.workspace = true
+n0-watcher.workspace = true
+noq-udp.workspace = true
+tokio.workspace = true
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+iroh = { workspace = true, features = ["portmapper"] }
+tokio = { workspace = true, features = ["net", "rt-multi-thread", "time"] }
+
+[target.'cfg(target_os = "android")'.dependencies]
+jni.workspace = true
+
+[dev-dependencies]
+jni.workspace = true
+
+[lints]
+workspace = true
