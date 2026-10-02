@@ -53,7 +53,7 @@ internal interface CapacityConnectionChannel : ConnectionChannel {
 /** One physical Kable connection. */
 internal interface BluetoothConnection : BluetoothLink {
     val control: ConnectionChannel
-    val packets: CapacityConnectionChannel?
+    val packets: CapacityConnectionChannel
 
     /** Waits until every control message currently in [control] has reached Kable. */
     suspend fun awaitClosed()
@@ -230,8 +230,8 @@ private class KableBluetoothConnection(
     private val controlChunks = Channel<ByteArray>(Channel.BUFFERED)
     private val controlRx = Channel<ByteArray>(Channel.BUFFERED)
     private val controlTx = Channel<ByteArray>(Channel.BUFFERED)
-    private val packetRx = packetCharacteristic?.let { Channel<ByteArray>(PACKET_QUEUE_CAPACITY) }
-    private val packetTx = packetCharacteristic?.let { Channel<ByteArray>(PACKET_QUEUE_CAPACITY) }
+    private val packetRx = Channel<ByteArray>(PACKET_QUEUE_CAPACITY)
+    private val packetTx = Channel<ByteArray>(PACKET_QUEUE_CAPACITY)
     private val packetWritable = MutableSharedFlow<Unit>(
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
@@ -264,13 +264,10 @@ private class KableBluetoothConnection(
 
     override suspend fun receiveControl(): ByteArray = controlRx.receive()
 
-    override val packets: CapacityConnectionChannel? = packetRx?.let { incoming ->
-        val outgoing = checkNotNull(packetTx)
-        object : CapacityConnectionChannel {
-            override val rx = incoming
-            override val tx = outgoing
-            override val writable = packetWritable
-        }
+    override val packets: CapacityConnectionChannel = object : CapacityConnectionChannel {
+        override val rx = packetRx
+        override val tx = packetTx
+        override val writable = packetWritable
     }
 
     suspend fun connect() {
@@ -331,7 +328,7 @@ private class KableBluetoothConnection(
             }
         }
         observe(controlCharacteristic, controlChunks)
-        packetCharacteristic?.let(::observePackets)
+        observePackets(packetCharacteristic)
         scope.launch {
             try {
                 while (true) controlRx.send(controlReader.receive())
@@ -342,9 +339,7 @@ private class KableBluetoothConnection(
             }
         }
         scope.launch { writeLoop(controlTx, controlCharacteristic, WriteType.WithResponse, false) }
-        if (packetCharacteristic != null && packetTx != null) {
-            scope.launch { writeLoop(packetTx, packetCharacteristic, WriteType.WithoutResponse, true) }
-        }
+        scope.launch { writeLoop(packetTx, packetCharacteristic, WriteType.WithoutResponse, true) }
     }
 
     private fun observe(characteristic: Characteristic, incoming: Channel<ByteArray>) {
@@ -360,7 +355,7 @@ private class KableBluetoothConnection(
     }
 
     private fun observePackets(characteristic: Characteristic) {
-        val incoming = checkNotNull(packetRx)
+        val incoming = packetRx
         peripheral.scope.launch(start = CoroutineStart.UNDISPATCHED) {
             try {
                 peripheral.observe(characteristic).collect { chunk ->
@@ -476,8 +471,8 @@ private class KableBluetoothConnection(
         controlRx.close()
         controlTx.close()
         if (error != null) controlFlushed.completeExceptionally(error)
-        packetRx?.close()
-        packetTx?.close()
+        packetRx.close()
+        packetTx.close()
     }
 }
 

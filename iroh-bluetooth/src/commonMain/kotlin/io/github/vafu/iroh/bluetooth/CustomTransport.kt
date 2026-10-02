@@ -39,9 +39,7 @@ internal class BluetoothCustomTransport(
         scope.launch {
             connections.collectLatest { connection ->
                 if (connection == null) return@collectLatest
-                val packetChannel = checkNotNull(connection.packets) {
-                    "Bluetooth packet channel is unavailable"
-                }
+                val packetChannel = connection.packets
                 endpoint.notifyWritable()
                 coroutineScope {
                     launch {

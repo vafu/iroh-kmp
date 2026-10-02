@@ -102,7 +102,6 @@ internal class BluetoothConnectionManager(
                 require(remoteEndpoint.id == options.remoteEndpointId) {
                     "Bluetooth peer authenticated as an unexpected Iroh endpoint"
                 }
-                checkNotNull(connection.packets) { "Bluetooth packet channel is unavailable" }
                 mutableAddressRecords.emit(AddressLookup.Record(remoteEndpoint.addrs))
                 mutableConnections.value = connection
                 logConnection("Bluetooth connection authenticated")

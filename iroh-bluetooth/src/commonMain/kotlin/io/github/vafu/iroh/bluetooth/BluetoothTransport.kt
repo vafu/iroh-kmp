@@ -12,7 +12,7 @@ internal class DefaultBluetoothTransport(
 ) : BluetoothTransport {
     private val manager = BluetoothConnectionManager(options)
     private val packetTransport = BluetoothCustomTransport(
-        transportId = options.transportId,
+        id = options.transportId,
         remoteAddress = options.remoteAddress,
         connections = manager.connections,
         connect = manager::start,
