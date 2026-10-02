@@ -6,7 +6,7 @@ internal actual fun nativeBindings(): NativeBindings = AndroidNativeBindings
 
 internal object AndroidNativeBindings : NativeBindings {
     init {
-        System.loadLibrary("iroh_kmp_kmp")
+        System.loadLibrary("iroh_kmp_native")
     }
 
     external fun installAndroidContext(context: Context)
