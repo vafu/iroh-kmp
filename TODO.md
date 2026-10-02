@@ -30,3 +30,13 @@ first reusable Android release.
 - Decide which reconnect metadata belongs in this library versus applications.
 - Add BLE throughput, latency, backpressure, and reconnect instrumentation.
 - Test transport behavior across adapter power and permission transitions.
+- Add a public diagnostics sink once its event vocabulary is clear from measurements.
+- Decide whether BLE peripheral/server support belongs here or in a sibling module.
+
+## API ergonomics
+
+- Replace `BluetoothTransportOptions` byte-array value semantics if it becomes a
+  frequently compared or persisted model.
+- Decide whether endpoint identity parsing/validation should happen in `Endpoint.Id`
+  or remain delegated to native Iroh.
+- Add structured cancellation/closure causes after the first external consumer needs them.
