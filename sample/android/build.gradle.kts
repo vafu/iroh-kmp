@@ -24,7 +24,7 @@ val buildIrohNative by tasks.registering(Exec::class) {
         "build", "--release", "--package", "iroh-kmp-native",
     )
     inputs.files(repositoryRoot.resolve("Cargo.toml"), repositoryRoot.resolve("Cargo.lock"))
-    inputs.dir(repositoryRoot.resolve("native/iroh-kmp-native/src"))
+    inputs.dir(repositoryRoot.resolve("iroh-runtime/native/src"))
     outputs.files(
         nativeOutput.map { it.file("arm64-v8a/libiroh_kmp_native.so") },
         nativeOutput.map { it.file("x86_64/libiroh_kmp_native.so") },
@@ -51,7 +51,7 @@ android {
 tasks.named("preBuild").configure { dependsOn(buildIrohNative) }
 
 dependencies {
-    implementation(project(":iroh-native"))
+    implementation(project(":iroh-runtime"))
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)

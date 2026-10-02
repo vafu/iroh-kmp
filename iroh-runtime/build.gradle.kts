@@ -11,7 +11,7 @@ val isMacOs = System.getProperty("os.name").startsWith("Mac", ignoreCase = true)
 
 kotlin {
     android {
-        namespace = "io.github.vafu.iroh.native"
+        namespace = "io.github.vafu.iroh.runtime"
         compileSdk = 35
         minSdk = 26
 
@@ -41,12 +41,12 @@ kotlin {
                 repositoryRoot.resolve("Cargo.toml"),
                 repositoryRoot.resolve("Cargo.lock"),
             )
-            inputs.dir(repositoryRoot.resolve("native/iroh-kmp-native/src"))
+            inputs.dir(projectDir.resolve("native/src"))
             outputs.file(nativeLibrary)
             enabled = isMacOs
         }
         val interop = target.compilations.getByName("main").cinterops.create("iroh_kmp") {
-            includeDirs(repositoryRoot.resolve("native/iroh-kmp-native"))
+            includeDirs(projectDir.resolve("native"))
             extraOpts(
                 "-libraryPath", nativeLibrary.parent,
                 "-staticLibrary", nativeLibrary.name,

@@ -1,5 +1,5 @@
 [workspace]
-members = ["native/iroh-kmp-native"]
+members = ["iroh-runtime/native"]
 resolver = "3"
 
 [workspace.package]

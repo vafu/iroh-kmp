@@ -17,6 +17,6 @@ dependencyResolutionManagement {
 rootProject.name = "iroh-kmp"
 
 include(":iroh-api")
-include(":iroh-native")
+include(":iroh-runtime")
 include(":iroh-bluetooth")
 include(":sample:android")
