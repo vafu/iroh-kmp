@@ -6,7 +6,7 @@ plugins {
 group = "io.github.vafu"
 version = "0.1.0-SNAPSHOT"
 
-val repositoryRoot = rootProject.projectDir
+val repositoryRoot = projectDir.parentFile
 val isMacOs = System.getProperty("os.name").startsWith("Mac", ignoreCase = true)
 
 kotlin {
