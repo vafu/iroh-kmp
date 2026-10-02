@@ -45,7 +45,7 @@ android {
     }
 
     buildFeatures.compose = true
-    sourceSets.getByName("main").jniLibs.directories.add(nativeOutput.get().asFile)
+    sourceSets.getByName("main").jniLibs.directories.add(nativeOutput.get().asFile.absolutePath)
 }
 
 tasks.named("preBuild").configure { dependsOn(buildIrohNative) }
