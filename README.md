@@ -5,7 +5,7 @@ idiomatic Kotlin API and optional platform transports.
 
 The repository currently contains four Gradle modules:
 
-- `iroh-api`: platform-free Kotlin contracts and value types.
+- `iroh-runtime:api`: platform-free Kotlin contracts and value types.
 - `iroh-runtime`: the Android and Apple implementation backed directly by Rust Iroh.
 - `iroh-bluetooth`: an optional Bluetooth implementation of Iroh custom transport.
 - `sample:android`: a minimal application that creates an endpoint and displays its ID.
@@ -14,13 +14,10 @@ See [TODO.md](TODO.md) for intentionally deferred API and distribution work.
 
 ## Kotlin API
 
-Applications depend on `iroh-api` in shared code and inject an `EndpointFactory`.
-Android and Apple applications use `NativeEndpointFactory` from `iroh-runtime`:
+Applications use `createEndpoint` from `iroh-runtime`:
 
 ```kotlin
-initializeAndroidIroh(applicationContext) // Android startup only
-
-val endpoint = NativeEndpointFactory.bind(
+val endpoint = createEndpoint(
     EndpointOptions(alpns = listOf(Endpoint.Alpn("com.example/game/1"))),
 )
 println(endpoint.id)
@@ -40,7 +37,7 @@ Android sample's `cargo ndk` task as the reference integration.
 Run the host-side Kotlin and Rust tests with:
 
 ```sh
-./gradlew :iroh-api:testAndroidHostTest :iroh-runtime:testAndroidHostTest \
+./gradlew :iroh-runtime:api:testAndroidHostTest :iroh-runtime:testAndroidHostTest \
   :iroh-bluetooth:testAndroidHostTest
 cargo test --workspace
 ```

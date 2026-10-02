@@ -23,14 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.vafu.iroh.Endpoint
 import io.github.vafu.iroh.EndpointOptions
-import io.github.vafu.iroh.NativeEndpointFactory
-import io.github.vafu.iroh.initializeAndroidIroh
+import io.github.vafu.iroh.createEndpoint
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initializeAndroidIroh(this)
         setContent { MaterialTheme { EndpointSample() } }
     }
 }
@@ -43,7 +41,7 @@ private fun EndpointSample() {
 
     LaunchedEffect(Unit) {
         runCatching {
-            NativeEndpointFactory.bind(
+            createEndpoint(
                 EndpointOptions(alpns = listOf(Endpoint.Alpn("iroh-kmp/sample/1"))),
             )
         }.onSuccess { endpoint = it }

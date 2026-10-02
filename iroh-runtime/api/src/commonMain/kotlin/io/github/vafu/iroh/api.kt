@@ -15,12 +15,6 @@ data class EndpointOptions(
     val addressLookups: List<AddressLookup> = emptyList(),
 )
 
-/** Binds concrete [Endpoint] implementations for one runtime or platform. */
-fun interface EndpointFactory {
-    /** Creates and binds an endpoint configured by [options]. */
-    suspend fun bind(options: EndpointOptions): Endpoint
-}
-
 /** One bound Iroh endpoint with its own cryptographic identity. */
 interface Endpoint {
     /** Textual application protocol negotiated during the QUIC handshake. */

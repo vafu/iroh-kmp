@@ -21,7 +21,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(project(":iroh-api"))
+            api(project(":iroh-runtime:api"))
             implementation(libs.kable.core)
             implementation(libs.kotlinx.coroutines.core)
         }

@@ -57,8 +57,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(project(":iroh-api"))
+            api(project(":iroh-runtime:api"))
             implementation(libs.kotlinx.coroutines.core)
+        }
+        androidMain.dependencies {
+            implementation(libs.androidx.startup.runtime)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
